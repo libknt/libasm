@@ -24,3 +24,4 @@ _main:
     ; 戻り値 (RAX) を0にする
     xor rax, rax
     ret
+    
