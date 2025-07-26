@@ -18,10 +18,10 @@ ft_strcpy:
     je .end_func
 
 .loop_start:
-    mov al, byte [rsi]
-    mov byte [rdi], al
+    mov dl, byte [rsi]
+    mov byte [rdi], dl
     
-    cmp al, 0
+    cmp dl, 0
     je .end_func
     
     inc rsi
