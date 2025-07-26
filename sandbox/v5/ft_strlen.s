@@ -7,10 +7,10 @@ _ft_strlen:
     xor rax, rax
 
 .loop_start:
-    cmp  byte [rdi + rax]
+    cmp  byte [rdi + rax], 0
     je .end_func
     inc rax
-    jmp loop_start
+    jmp .loop_start
 
 
 .end_func:
