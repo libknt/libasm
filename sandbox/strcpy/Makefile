@@ -1,47 +1,41 @@
-NAME = test_strcpy
-EXTENDED_NAME = extended_test
-ASM_FILE = ft_strcpy.s
-C_FILE = test_strcpy.c
-EXTENDED_C_FILE = extended_test.c
-OBJ_ASM = ft_strcpy.o
-OBJ_C = test_strcpy.o
-EXTENDED_OBJ_C = extended_test.o
+NAME = libasm.a
 
-AS = as
-CC = gcc
+SRCS = ft_strlen.s
+
+OBJS = $(SRCS:.s=.o)
+
+BONUS_OBJS = $(BOUNS_SRCS:.s=.o)
+
+NASM = nasm
+
+NAASMFLAGS = -f elf64
+
+CC = cc
+
 CFLAGS = -Wall -Wextra -Werror
+
+TEST_EXEC = test_strlen
 
 all: $(NAME)
 
-$(NAME): $(OBJ_ASM) $(OBJ_C)
-	$(CC) $(OBJ_ASM) $(OBJ_C) -o $(NAME)
+$(NAME): $(OBJS)
+	ar rcs $(NAME) $(OBJS)
 
-$(EXTENDED_NAME): $(OBJ_ASM) $(EXTENDED_OBJ_C)
-	$(CC) $(OBJ_ASM) $(EXTENDED_OBJ_C) -o $(EXTENDED_NAME)
+test: $(TEST_EXEC)
+	./$(TEST_EXEC)
 
-$(OBJ_ASM): $(ASM_FILE)
-	$(AS) $(ASM_FILE) -o $(OBJ_ASM)
+$(TEST_EXEC): test_strlen.c $(OBJS)
+	$(CC) $(CFLAGS) test_strlen.c $(OBJS) -o $(TEST_EXEC)
 
-$(OBJ_C): $(C_FILE)
-	$(CC) $(CFLAGS) -c $(C_FILE) -o $(OBJ_C)
-
-$(EXTENDED_OBJ_C): $(EXTENDED_C_FILE)
-	$(CC) $(CFLAGS) -c $(EXTENDED_C_FILE) -o $(EXTENDED_OBJ_C)
+%.o: %.s
+	$(NASM) $(NAASMFLAGS) $< -o $@
 
 clean:
-	rm -f $(OBJ_ASM) $(OBJ_C) $(EXTENDED_OBJ_C)
+	rm -rf $(OBJS)
 
 fclean: clean
-	rm -f $(NAME) $(EXTENDED_NAME)
+	rm -f $(NAME) $(TEST_EXEC) a.out
 
 re: fclean all
 
-test: $(NAME)
-	./$(NAME)
-
-extended: $(EXTENDED_NAME)
-	./$(EXTENDED_NAME)
-
-all_tests: test extended
-
-.PHONY: all clean fclean re test extended all_tests 
+.PHONY: all clean fclean re test
