@@ -1,6 +1,6 @@
 NAME = libasm.a
 
-SRCS = ft_strlen.s
+SRCS = ft_strcpy.s
 
 OBJS = $(SRCS:.s=.o)
 
@@ -14,7 +14,7 @@ CC = cc
 
 CFLAGS = -Wall -Wextra -Werror
 
-TEST_EXEC = test_strlen
+TEST_EXEC = test_strcpy
 
 all: $(NAME)
 
@@ -24,8 +24,8 @@ $(NAME): $(OBJS)
 test: $(TEST_EXEC)
 	./$(TEST_EXEC)
 
-$(TEST_EXEC): test_strlen.c $(OBJS)
-	$(CC) $(CFLAGS) test_strlen.c $(OBJS) -o $(TEST_EXEC)
+$(TEST_EXEC): test_strcpy.c $(OBJS)
+	$(CC) $(CFLAGS) test_strcpy.c $(OBJS) -o $(TEST_EXEC)
 
 %.o: %.s
 	$(NASM) $(NAASMFLAGS) $< -o $@
