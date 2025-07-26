@@ -6,13 +6,21 @@ OBJS = $(SRCS:.s=.o)
 
 BONUS_OBJS = $(BOUNS_SRCS:.s=.o)
 
+# OS detection for nasm format
+UNAME_S := $(shell uname -s)
+
 NASM = nasm
 
-NAASMFLAGS = -f elf64
-
-CC = cc
-
-CFLAGS = -Wall -Wextra -Werror
+ifeq ($(UNAME_S),Linux)
+	NASMFLAGS = -f elf64 -D LINUX
+	CC = cc
+	CFLAGS = -Wall -Wextra -Werror
+else ifeq ($(UNAME_S),Darwin)
+	NASMFLAGS = -f macho64 -D MACOS
+	CC = cc
+	CFLAGS = -Wall -Wextra -Werror -arch x86_64
+	LDFLAGS = -lSystem -isysroot $(shell xcrun --show-sdk-path) -arch x86_64
+endif
 
 TEST_EXEC = test_strcpy
 
@@ -25,10 +33,14 @@ test: $(TEST_EXEC)
 	./$(TEST_EXEC)
 
 $(TEST_EXEC): test_strcpy.c $(OBJS)
+ifeq ($(UNAME_S),Darwin)
+	$(CC) $(CFLAGS) test_strcpy.c $(OBJS) $(LDFLAGS) -o $(TEST_EXEC)
+else
 	$(CC) $(CFLAGS) test_strcpy.c $(OBJS) -o $(TEST_EXEC)
+endif
 
 %.o: %.s
-	$(NASM) $(NAASMFLAGS) $< -o $@
+	$(NASM) $(NASMFLAGS) $< -o $@
 
 clean:
 	rm -rf $(OBJS)
@@ -38,4 +50,14 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re test
+info:
+	@echo "OS: $(UNAME_S)"
+	@echo "Assembler: $(NASM)"
+	@echo "Assembler flags: $(NASMFLAGS)"
+	@echo "C Compiler: $(CC)"
+	@echo "C flags: $(CFLAGS)"
+ifeq ($(UNAME_S),Darwin)
+	@echo "Linker flags: $(LDFLAGS)"
+endif
+
+.PHONY: all clean fclean re test info

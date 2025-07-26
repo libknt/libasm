@@ -1,7 +1,12 @@
 section .text
-global ft_strcpy
 
+%ifdef MACOS
+global _ft_strcpy
+_ft_strcpy:
+%else
+global ft_strcpy
 ft_strcpy:
+%endif
     push rbp
     mov rbp, rsp
     mov rax, rdi
@@ -15,14 +20,13 @@ ft_strcpy:
 .loop_start:
     mov al, byte [rsi]
     mov byte [rdi], al
+    
+    cmp al, 0
+    je .end_func
+    
     inc rsi
     inc rdi
-
-    cmp rdi, 0
-    jnz .loop_start
-
-    je .end_func
-
+    jmp .loop_start
 
 .end_func:
     pop rbp
