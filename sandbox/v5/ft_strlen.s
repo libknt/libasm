@@ -1,7 +1,7 @@
 section .text
-global _ft_strlen
+global ft_strlen
 
-_ft_strlen:
+ft_strlen:
     push rbp
     mov rbp, rsp
     xor rax, rax
@@ -11,7 +11,6 @@ _ft_strlen:
     je .end_func
     inc rax
     jmp .loop_start
-
 
 .end_func:
     pop rbp
