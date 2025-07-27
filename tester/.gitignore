@@ -1,0 +1,180 @@
+# ===============================================
+# LIBASM テスター .gitignore
+# ビルド成果物と一時ファイルを除外
+# ===============================================
+
+# ビルド成果物
+# ----------------------------------------------
+# オブジェクトファイル
+*.o
+*.obj
+*.so
+*.dylib
+*.a
+
+# デバッグシンボル（macOS）
+*.dSYM/
+
+# 実行ファイル (テストプログラム)
+test_strlen
+test_strcmp
+test_strcpy
+test_strdup
+test_write
+test_read
+main_tester
+
+# 本番版実行ファイル
+*_real
+
+# リンク成果物
+*.exe
+*.out
+a.out
+
+# 一時ファイルとテストデータ
+# ----------------------------------------------
+# テスト用一時ファイル
+*.tmp
+*.temp
+test_*.txt
+test_temp_*
+*_test_*.tmp
+
+# ログファイル
+*.log
+*.out.txt
+
+# バックアップファイル
+# ----------------------------------------------
+*~
+*.bak
+*.swp
+*.swo
+*.orig
+*.rej
+
+# エディタ固有ファイル
+# ----------------------------------------------
+# Vim
+.*.swp
+.*.swo
+*.swn
+*.swm
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# CLion / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS固有ファイル
+# ----------------------------------------------
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+*.ini
+desktop.ini
+
+# Linux
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# デバッグとプロファイリング
+# ----------------------------------------------
+# GDB
+.gdb_history
+
+# Valgrind
+vgcore.*
+*.vglog
+
+# コアダンプ
+core
+core.*
+*.core
+
+# テスト関連
+# ----------------------------------------------
+# カバレッジファイル
+*.gcov
+*.gcda
+*.gcno
+*.info
+
+# テスト結果
+test_results/
+test_output/
+*.test
+
+# パフォーマンステスト結果
+benchmark_*.txt
+performance_*.log
+
+# 依存関係とパッケージ
+# ----------------------------------------------
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+!tester/Makefile
+
+# コンパイル用データベース
+compile_commands.json
+
+# その他
+# ----------------------------------------------
+# 一般的な一時ディレクトリ
+tmp/
+temp/
+.tmp/
+
+# アーカイブファイル
+*.tar
+*.tar.gz
+*.zip
+*.rar
+
+# メモリダンプ
+*.dmp
+
+# ===============================================
+# 重要: 以下のファイルは含める (!)
+# ===============================================
+# ソースファイル
+!*.c
+!*.h
+!*.s
+
+# ドキュメント
+!README.md
+!Makefile
+
+# 設定ファイル
+!.gitignore 
+
+*.dSYM/
