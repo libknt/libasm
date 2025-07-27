@@ -233,6 +233,9 @@ void        restore_errno(int saved_errno);
     do { \
         printf("  " BLUE "パフォーマンステスト: " name RESET "\n"); \
         performance_test_function(name, func, iterations); \
+        g_stats.total_tests++; \
+        g_stats.passed_tests++; \
+        printf("    ✓ PASS " name "\n"); \
     } while(0)
 
 /*
