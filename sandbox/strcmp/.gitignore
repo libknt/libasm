@@ -1,4 +1,4 @@
 *.o
 hello
 *.a
-test_strcpy
+test_strcmp

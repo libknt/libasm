@@ -1,11 +1,11 @@
 section .text
 
 %ifdef MACOS
-global _ft_strcpy
-_ft_strcpy:
+global _ft_strcmp
+_ft_strcmp:
 %else
-global ft_strcpy
-ft_strcpy:
+global ft_strcmp
+ft_strcmp:
 %endif
     push rbp
     mov rbp, rsp
