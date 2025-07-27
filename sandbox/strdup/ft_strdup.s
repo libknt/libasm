@@ -6,7 +6,7 @@ _ft_strdup:
 extern _ft_strlen
 extern _ft_strcpy
 extern _malloc
-extern __error
+extern ___error
 %else
 global ft_strdup
 ft_strdup:
@@ -57,7 +57,7 @@ extern __errno_location
     mov rdi, rax
 
 %ifdef MACOS
-    call __error
+    call ___error
 %else
     call __errno_location
 %endif

@@ -3,7 +3,7 @@ section .text
 %ifdef MACOS
 global _ft_read
 _ft_read:
-extern __error
+extern ___error
 %else
 global ft_read
 ft_read:
@@ -38,7 +38,7 @@ extern __errno_location
     mov rdi, rax
 
 %ifdef MACOS
-    call __error
+    call ___error
 %else
     call __errno_location
 %endif
