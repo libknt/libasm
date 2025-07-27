@@ -41,7 +41,7 @@ extern __errno_location
     call __errno_location
 %endif
 
-    mov [rax], dword rdi
+    mov [rax], edi
 
     mov rax, -1
 
