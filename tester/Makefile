@@ -22,6 +22,16 @@ LIBASM_DIR = ..
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
 
+# アーキテクチャ検出
+UNAME_M := $(shell uname -m)
+ifeq ($(UNAME_M),arm64)
+    # Apple Silicon環境ではRosettaを使用してx86_64でビルド
+    ARCH_PREFIX = arch -x86_64
+else
+    # その他の環境では通常通りビルド
+    ARCH_PREFIX = 
+endif
+
 # テストファイル
 TEST_SOURCES = test_strlen.c test_strcmp.c test_strcpy.c test_strdup.c test_write.c test_read.c
 TEST_NAMES = test_strlen test_strcmp test_strcpy test_strdup test_write test_read
@@ -46,57 +56,57 @@ all: $(COMMON_OBJS) $(TEST_NAMES) $(MAIN_TEST)
 # libasmライブラリのビルド
 $(LIBASM):
 	@echo "$(CYAN)$(BOLD)libasm.aをビルド中...$(RESET)"
-	@$(MAKE) -C $(LIBASM_DIR) all
+	@$(ARCH_PREFIX) $(MAKE) -C $(LIBASM_DIR) all
 
 # 共通オブジェクトファイルのビルド
 test_utils.o: test_utils.c test_utils.h
 	@echo "$(YELLOW)共通テストユーティリティをビルド中...$(RESET)"
-	@$(CC) $(CFLAGS) -c test_utils.c -o test_utils.o
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) -c test_utils.c -o test_utils.o
 
 test_stubs.o: test_stubs.c test_utils.h
 	@echo "$(YELLOW)テスト用スタブをビルド中...$(RESET)"
-	@$(CC) $(CFLAGS) -c test_stubs.c -o test_stubs.o
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) -c test_stubs.c -o test_stubs.o
 
 # 個別テスト実行ファイルのビルド（スタブ版）
 test_strlen: test_strlen.c $(COMMON_OBJS)
 	@echo "$(YELLOW)test_strlen をビルド中（スタブ版）...$(RESET)"
-	@$(CC) $(CFLAGS) test_strlen.c $(COMMON_OBJS) -o test_strlen
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strlen.c $(COMMON_OBJS) -o test_strlen
 
 test_strcmp: test_strcmp.c $(COMMON_OBJS)
 	@echo "$(YELLOW)test_strcmp をビルド中（スタブ版）...$(RESET)"
-	@$(CC) $(CFLAGS) test_strcmp.c $(COMMON_OBJS) -o test_strcmp
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strcmp.c $(COMMON_OBJS) -o test_strcmp
 
 test_strcpy: test_strcpy.c $(COMMON_OBJS)
 	@echo "$(YELLOW)test_strcpy をビルド中（スタブ版）...$(RESET)"
-	@$(CC) $(CFLAGS) test_strcpy.c $(COMMON_OBJS) -o test_strcpy
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strcpy.c $(COMMON_OBJS) -o test_strcpy
 
 test_strdup: test_strdup.c $(COMMON_OBJS)
 	@echo "$(YELLOW)test_strdup をビルド中（スタブ版）...$(RESET)"
-	@$(CC) $(CFLAGS) test_strdup.c $(COMMON_OBJS) -o test_strdup
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strdup.c $(COMMON_OBJS) -o test_strdup
 
 test_write: test_write.c $(COMMON_OBJS)
 	@echo "$(YELLOW)test_write をビルド中（スタブ版）...$(RESET)"
-	@$(CC) $(CFLAGS) test_write.c $(COMMON_OBJS) -o test_write
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_write.c $(COMMON_OBJS) -o test_write
 
 test_read: test_read.c $(COMMON_OBJS)
 	@echo "$(YELLOW)test_read をビルド中（スタブ版）...$(RESET)"
-	@$(CC) $(CFLAGS) test_read.c $(COMMON_OBJS) -o test_read
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_read.c $(COMMON_OBJS) -o test_read
 
 # メインテストランナーのビルド（スタブ版）
 $(MAIN_TEST): $(MAIN_TEST).c $(COMMON_OBJS)
 	@echo "$(YELLOW)メインテストランナーをビルド中（スタブ版）...$(RESET)"
-	@$(CC) $(CFLAGS) $(MAIN_TEST).c $(COMMON_OBJS) -o $(MAIN_TEST)
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) $(MAIN_TEST).c $(COMMON_OBJS) -o $(MAIN_TEST)
 
 # 本番版ビルド（libasm使用）
 real: $(LIBASM) test_utils.o
 	@echo "$(GREEN)$(BOLD)本番版（libasm使用）をビルド中...$(RESET)"
-	@$(CC) $(CFLAGS) test_strlen.c test_utils.o $(LIBASM) -o test_strlen_real
-	@$(CC) $(CFLAGS) test_strcmp.c test_utils.o $(LIBASM) -o test_strcmp_real
-	@$(CC) $(CFLAGS) test_strcpy.c test_utils.o $(LIBASM) -o test_strcpy_real
-	@$(CC) $(CFLAGS) test_strdup.c test_utils.o $(LIBASM) -o test_strdup_real
-	@$(CC) $(CFLAGS) test_write.c test_utils.o $(LIBASM) -o test_write_real
-	@$(CC) $(CFLAGS) test_read.c test_utils.o $(LIBASM) -o test_read_real
-	@$(CC) $(CFLAGS) $(MAIN_TEST).c test_utils.o $(LIBASM) -o $(MAIN_TEST)_real
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strlen.c test_utils.o $(LIBASM) -o test_strlen_real
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strcmp.c test_utils.o $(LIBASM) -o test_strcmp_real
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strcpy.c test_utils.o $(LIBASM) -o test_strcpy_real
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strdup.c test_utils.o $(LIBASM) -o test_strdup_real
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_write.c test_utils.o $(LIBASM) -o test_write_real
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_read.c test_utils.o $(LIBASM) -o test_read_real
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) $(MAIN_TEST).c test_utils.o $(LIBASM) -o $(MAIN_TEST)_real
 
 # 全テスト実行
 test: all
