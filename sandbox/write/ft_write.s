@@ -19,17 +19,33 @@ extern ___errno_location
 %endif
 
     syscall
+
+    cmp rax, 0
+    jl .error
     
     jc .error
 
     jmp .success
 
+.success:
+    mov rax, rdx
+    jmp .end_func
 
-.error
+.error:
+    neg rax
+
+    mov rdi, rax
+
+%ifdef MACOS
+    call ___error
+%else
+    call ___errno_location
+%endif
+
+    mov [rax], dword rdi
+
     mov rax, -1
 
-.success
-    mov rax, rdx
 
 .end_func:
     pop rbp
