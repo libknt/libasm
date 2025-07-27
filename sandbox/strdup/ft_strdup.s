@@ -26,16 +26,28 @@ extern __errno_location
     sub rsp, 0x8
     push rdi
 
+%ifdef MACOS
+    call _ft_strlen
+%else
     call ft_strlen
+%endif
     mov rdi, rax
     inc rdi
 
+%ifdef MACOS
+    call _malloc
+%else
     call malloc
+%endif
     jc .error
     mov rdi, rax
 
     pop rsi
+%ifdef MACOS
+    call _ft_strcpy
+%else
     call ft_strcpy
+%endif
 
     jmp .end_func
 
