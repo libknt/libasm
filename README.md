@@ -70,3 +70,86 @@ OSの起動部分や、特定のハードウェアを動かすプログラム、
 
 ## 読んだ参考書
 - [独習アセンブラ](https://www.shoeisha.co.jp/book/detail/9784798170299)
+
+## 論理式
+
+C言語の論理式・条件文とアセンブリでの実装方法の対応：
+
+### ビット演算
+```c
+// C言語
+int a = x & y;      // ビット論理積
+int b = x | y;      // ビット論理和  
+int c = x ^ y;      // ビット排他的論理和
+int d = ~x;         // ビット反転
+```
+
+```assembly
+; アセンブリ
+and rax, rbx        ; rax = rax & rbx
+or  rax, rbx        ; rax = rax | rbx
+xor rax, rbx        ; rax = rax ^ rbx
+not rax             ; rax = ~rax
+```
+
+### 条件分岐
+```c
+// C言語 if文
+if (a == b) {
+    // 処理
+}
+```
+
+```assembly
+; アセンブリ
+cmp rax, rbx        ; a - b を計算（結果は保存せず、フラグのみ設定）
+je  equal_label     ; ZF=1 なら equal_label へジャンプ
+; else部分の処理
+jmp end_label
+equal_label:
+; if部分の処理
+end_label:
+```
+
+### フラグレジスタ
+比較結果は以下のフラグで判定：
+- **ZF (Zero Flag)**: 結果が0なら1（等しい場合）
+- **CF (Carry Flag)**: 桁上がりで1（unsigned比較用）
+- **SF (Sign Flag)**: 結果が負なら1（signed比較用）
+- **OF (Overflow Flag)**: オーバーフロー時1
+
+### 条件ジャンプ命令
+```c
+// C言語の比較演算子との対応
+if (a == b)  // je  (Jump if Equal)
+if (a != b)  // jne (Jump if Not Equal)
+if (a < b)   // jl  (Jump if Less, signed)
+if (a > b)   // jg  (Jump if Greater, signed)
+if (a <= b)  // jle (Jump if Less or Equal, signed)
+if (a >= b)  // jge (Jump if Greater or Equal, signed)
+```
+
+### 論理演算 (&&, ||)
+```c
+// C言語
+if (a && b) { /* 処理 */ }
+```
+
+```assembly
+; アセンブリ（短絡評価）
+test rax, rax       ; a をテスト
+jz   end_label      ; a が 0 なら終了
+test rbx, rbx       ; b をテスト  
+jz   end_label      ; b が 0 なら終了
+; 両方とも真の場合の処理
+end_label:
+```
+
+## その他
+```asm
+push rbp                    ; 現在のベースポインタを保存
+mov rbp, rsp               ; 新しいスタックフレームを設定
+...
+pop rbp                    ; 元のベースポインタを復元
+ret                        ; 呼び出し元に戻る (戻り値はraxに格納済み)
+```
