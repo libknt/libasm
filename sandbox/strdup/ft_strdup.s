@@ -19,11 +19,9 @@ extern __errno_location
     push rbp
     mov rbp, rsp
 
-    xor rax, rax
+    test rdi, rdi
+    jz .error_null
 
-.memory_allocation:
-
-    sub rsp, 0x8
     push rdi
 
 %ifdef MACOS
@@ -31,30 +29,37 @@ extern __errno_location
 %else
     call ft_strlen
 %endif
+    inc rax
     mov rdi, rax
-    inc rdi
+
+
+.memory_allocation:
+
+    sub rsp, 0x8
 
 %ifdef MACOS
     call _malloc
 %else
     call malloc
 %endif
+    test rax, rax
     jz .error
-    mov rdi, rax
 
     pop rsi
+    mov rdi, rax
+
 %ifdef MACOS
     call _ft_strcpy
 %else
     call ft_strcpy
 %endif
-
+    pop rax
     jmp .end_func
 
 .error:
-    neg rax
+    pop rdi
 
-    mov rdi, rax
+    mov rdi, 12
 
 %ifdef MACOS
     call ___error
@@ -62,9 +67,23 @@ extern __errno_location
     call __errno_location
 %endif
 
-    mov [rax], dword rdi
+    mov [rax], edi
+    xor rax, rax
+    jmp .end_func
 
-    mov rax, 0
+.error_null:
+    mov rdi, 22
+
+%ifdef MACOS
+    call __error
+%else
+    call __errno_location
+%endif
+
+    mov [rax], edi
+
+    xor rax, rax
+
 
 .end_func:
     pop rbp
