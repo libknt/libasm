@@ -39,7 +39,7 @@ extern __errno_location
 %else
     call malloc
 %endif
-    jc .error
+    jz .error
     mov rdi, rax
 
     pop rsi
@@ -52,8 +52,19 @@ extern __errno_location
     jmp .end_func
 
 .error:
+    neg rax
 
+    mov rdi, rax
 
+%ifdef MACOS
+    call __error
+%else
+    call __errno_location
+%endif
+
+    mov [rax], dword rdi
+
+    mov rax, 0
 
 .end_func:
     pop rbp
