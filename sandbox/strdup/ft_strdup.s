@@ -75,7 +75,7 @@ extern __errno_location
     mov rdi, 22
 
 %ifdef MACOS
-    call __error
+    call ___error
 %else
     call __errno_location
 %endif
