@@ -6,13 +6,15 @@ _ft_strdup:
 extern _ft_strlen
 extern _ft_strcpy
 extern _malloc
-
+extern __error
 %else
 global ft_strdup
 ft_strdup:
 extern ft_strlen
 extern ft_strcpy
 extern malloc
+extern __errno_location
+
 %endif
     push rbp
     mov rbp, rsp
@@ -38,6 +40,7 @@ extern malloc
     jmp .end_func
 
 .error:
+
 
 
 .end_func:
