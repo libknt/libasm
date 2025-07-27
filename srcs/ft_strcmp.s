@@ -31,7 +31,7 @@ ft_strcmp:
     sub rax, rcx
     jmp .end_func
 
-.zero_strings
+.zero_strings:
     xor rax, rax
 
 .end_func:

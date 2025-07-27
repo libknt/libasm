@@ -1,14 +1,12 @@
 NAME = libasm.a
 
-SRCS = ft_read.s ft_strcmp.s ft_strcpy.s ft_strdup.s ft_strlen.s
+SRCS = srcs/ft_read.s srcs/ft_strcmp.s srcs/ft_strcpy.s srcs/ft_strdup.s srcs/ft_strlen.s srcs/ft_write.s
 
 OBJS = $(SRCS:.s=.o)
 
-BONUS_OBJS = $(BOUNS_SRCS:.s=.o)
-
 NASM = nasm
 
-NAASMFLAGS = -f elf64
+NASMFLAGS = -f elf64
 
 CC = cc
 
@@ -28,7 +26,7 @@ $(TEST_EXEC): test_strlen.c $(OBJS)
 	$(CC) $(CFLAGS) test_strlen.c $(OBJS) -o $(TEST_EXEC)
 
 %.o: %.s
-	$(NASM) $(NAASMFLAGS) $< -o $@
+	$(NASM) $(NASMFLAGS) $< -o $@
 
 clean:
 	rm -rf $(OBJS)

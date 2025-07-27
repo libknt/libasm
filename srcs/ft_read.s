@@ -28,8 +28,6 @@ extern __errno_location
     jmp .success
 
 .success:
-    mov rax, rdx
-
     jmp .end_func
 
 .error:
