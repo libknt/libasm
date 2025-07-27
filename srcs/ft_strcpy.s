@@ -1,3 +1,9 @@
+; ----------------------------------------
+; ft_strcpy.s
+; ----------------------------------------
+; manual: man strcpy
+; ----------------------------------------
+
 section .text
 
 %ifdef MACOS
@@ -7,27 +13,34 @@ _ft_strcpy:
 global ft_strcpy
 ft_strcpy:
 %endif
-    push rbp
-    mov rbp, rsp
-    mov rax, rdi
+    ; スタックフレームの設定
+    push rbp                    ; 現在のベースポインタを保存
+    mov rbp, rsp               ; 新しいスタックフレームを設定
+    mov rax, rdi               ; 戻り値用にdestination pointerを保存
 
-    cmp rdi, 0
-    je .end_func
+    ; NULL pointer チェック (destination)
+    cmp rdi, 0                 ; dest が NULL かどうか確認
+    je .end_func               ; Jump if Equal
 
-    cmp rsi, 0
-    je .end_func
+    ; NULL pointer チェック (source)
+    cmp rsi, 0                 ; src が NULL かどうか確認
+    je .end_func               ; Jump if Equal
 
 .loop_start:
-    mov dl, byte [rsi]
-    mov byte [rdi], dl
+    ; 1文字をsrcからdestにコピー
+    mov dl, byte [rsi]         ; src[i] を dl レジスタに読み込み
+    mov byte [rdi], dl         ; dest[i] に dl の値を書き込み
     
-    cmp dl, 0
-    je .end_func
+    ; null終端文字かどうかをチェック
+    cmp dl, 0                  ; コピーした文字が '\0' かどうか確認
+    je .end_func               ; Jump if Equal
     
-    inc rdi
-    inc rsi
-    jmp .loop_start
+    ; 次の文字へ進む
+    inc rdi                    ; dest のポインタを次の文字へ
+    inc rsi                    ; src のポインタを次の文字へ
+    jmp .loop_start            ; Jump to loop_start
 
 .end_func:
-    pop rbp
-    ret
+    ; スタックフレームの復元
+    pop rbp                    ; 元のベースポインタを復元
+    ret                        ; 呼び出し元に戻る (戻り値はraxに格納済み)
