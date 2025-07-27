@@ -58,6 +58,39 @@ OSの起動部分や、特定のハードウェアを動かすプログラム、
 - システムコールが失敗すると負の値を返す
 - `errno`の設定は別途必要（`__errno_location`を呼び出し）
 
+### システムコールとerrno
+```c
+// C言語
+ssize_t result = read(fd, buffer, count);
+if (result == -1) {
+    // errno が自動的に設定される
+    perror("read failed");
+}
+```
+
+### システムコール番号
+OS毎に異なるシステムコール番号：
+```assembly
+%ifdef MACOS
+    mov rax, 0x2000003     ; macOS read
+%else  
+    mov rax, 0             ; Linux read
+%endif
+
+%ifdef MACOS
+    mov rax, 0x2000004     ; macOS write  
+%else
+    mov rax, 1             ; Linux write
+%endif
+```
+
+### errno設定の流れ
+1. システムコールが失敗 → 負のエラーコードが返る
+2. `neg rax` でエラーコードを正の値に変換  
+3. `__errno_location()` で errno のアドレスを取得
+4. そのアドレスにエラーコードを書き込み
+5. 戻り値として -1 を返す
+
 ### よく使われる命令
 - **mov**: データ移動（代入）
 - **cmp**: 比較（if文の条件）
@@ -192,6 +225,64 @@ end_label:
 - **CF (Carry Flag)**: 桁上がりで1（unsigned比較用）
 - **SF (Sign Flag)**: 結果が負なら1（signed比較用）
 - **OF (Overflow Flag)**: オーバーフロー時1
+
+### Carry Flag（CF）の詳細
+Carry Flagは複数の用途で使用される重要なフラグ：
+
+#### 1. 算術演算での桁上がり・桁下がり
+```c
+// C言語の例
+unsigned char a = 200;
+unsigned char b = 100;  
+unsigned char sum = a + b;    // 300 → 44 (256でオーバーフロー)
+// この時CFが1に設定される
+```
+
+```assembly
+; アセンブリ
+mov al, 200               ; al = 200
+add al, 100               ; al = 44, CF = 1 (桁上がり発生)
+jc overflow_occurred      ; CF=1 なら分岐
+```
+
+#### 2. システムコールのエラー判定
+```assembly
+; システムコール実行後
+syscall                   ; システムコール実行
+jc .error                 ; CF=1 ならエラー（多くのOSで使用）
+```
+
+#### 3. unsigned比較での使用
+```assembly
+; unsigned比較: a < b
+cmp rax, rbx              ; rax - rbx を計算
+jb  a_is_less             ; CF=1 なら rax < rbx (unsigned)
+jc  a_is_less             ; 同じ意味（jbとjcは同じ）
+```
+
+#### 4. CFの状態変化例
+```assembly
+; 例1: 桁上がりなし
+mov al, 50
+add al, 30                ; al = 80, CF = 0
+
+; 例2: 桁上がりあり  
+mov al, 200
+add al, 100               ; al = 44, CF = 1 (256 - 256 = 44)
+
+; 例3: 比較での使用
+mov rax, 5
+cmp rax, 10               ; 5 - 10 = -5 (unsigned では借用発生)
+                          ; CF = 1 (5 < 10 in unsigned)
+```
+
+#### 5. よく使うCF関連の条件ジャンプ
+```assembly
+jc   label                ; CF=1 なら分岐（Carry）
+jnc  label                ; CF=0 なら分岐（No Carry）
+jb   label                ; CF=1 なら分岐（Below, unsigned <）
+jae  label                ; CF=0 なら分岐（Above or Equal, unsigned >=）
+```
 
 ### 条件ジャンプ命令
 ```c
