@@ -24,8 +24,8 @@ ft_strcpy:
     cmp dl, 0
     je .end_func
     
-    inc rsi
     inc rdi
+    inc rsi
     jmp .loop_start
 
 .end_func:
