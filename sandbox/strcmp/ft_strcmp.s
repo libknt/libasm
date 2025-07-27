@@ -13,22 +13,26 @@ ft_strcmp:
 
 .loop_start:
     mov al, byte [rdi]
-    cmp al, byte [rsi]
+    mov bl, byte [rsi]
+    cmp al, bl  
     jne .not_equal_chars
 
     cmp al, 0
-    jmp .end_func
+    je .zero_strings
 
     inc rdi
     inc rsi
     jmp .loop_start
 
 .not_equal_chars:
-    movzx rax, byte [rdi]
-    movzx rcx, byte [rsi]
+    movzx rax, al
+    movzx rcx, bl
 
     sub rax, rcx
+    jmp .end_func
 
+.zero_strings
+    xor rax, rax
 
 .end_func:
     pop rbp
