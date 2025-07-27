@@ -64,6 +64,8 @@ OSの起動部分や、特定のハードウェアを動かすプログラム、
 - **je/jne**: 条件ジャンプ（equal/not equal）
 - **call/ret**: 関数呼び出し/戻り
 - **push/pop**: スタック操作
+- **movzx**: ゼロ拡張付きデータ移動（unsigned キャスト）
+- **movsx**: 符号拡張付きデータ移動（signed キャスト）
 
 ### メモリアドレッシング
 ```assembly
@@ -101,6 +103,40 @@ jmp loop_start
 ; 配列アクセス
 mov al, byte [rdi + 1]  ; str[1] 
 mov bl, byte [rdi + 2]  ; str[2]
+```
+
+### データ拡張命令（movzx/movsx）
+小さいサイズから大きいサイズへの型変換：
+
+```c
+// C言語
+unsigned char c = 0xFF;    // 255
+unsigned int ui = c;       // 255 (ゼロ拡張)
+signed char sc = -1;       // 0xFF (2の補数)
+signed int si = sc;        // -1 (符号拡張)
+```
+
+```assembly
+; アセンブリ
+movzx eax, byte [rdi]      ; unsigned int = (unsigned int)unsigned_char
+movsx eax, byte [rdi]      ; signed int = (signed int)signed_char
+
+; 具体例
+mov al, 0xFF               ; al = 255 (0xFF)
+movzx eax, al              ; eax = 0x000000FF (255)
+movsx eax, al              ; eax = 0xFFFFFFFF (-1, 符号拡張)
+```
+
+### 拡張のパターン
+```assembly
+movzx ax, bl               ; 8bit → 16bit (ゼロ拡張)
+movzx eax, bl              ; 8bit → 32bit (ゼロ拡張)  
+movzx rax, bl              ; 8bit → 64bit (ゼロ拡張)
+movzx eax, bx              ; 16bit → 32bit (ゼロ拡張)
+
+movsx ax, bl               ; 8bit → 16bit (符号拡張)
+movsx eax, bl              ; 8bit → 32bit (符号拡張)
+movsx rax, bl              ; 8bit → 64bit (符号拡張)
 ```
 
 ## CコンパイラによるC言語から機械語へのコンパイルの流れ
