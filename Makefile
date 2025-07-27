@@ -6,7 +6,13 @@ OBJS = $(SRCS:.s=.o)
 
 NASM = nasm
 
-NASMFLAGS = -f elf64
+# OS detection
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+    NASMFLAGS = -f macho64 -D MACOS
+else
+    NASMFLAGS = -f elf64
+endif
 
 CC = cc
 
