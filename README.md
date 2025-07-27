@@ -1,1 +1,51 @@
 # libasm
+
+libasmは、標準Cライブラリの関数をx86-64アセンブリ言語で実装したプロジェクト
+
+
+## アセンブリ言語とは？
+アセンブリ言語は、コンピューターのCPUが直接理解する「機械語」を、人間が分かりやすいように記号で表した低水準プログラミング言語です。
+コンピューターへの具体的な指示を出すために使われます。非常に高速なプログラムを作れますが、CPUの構造に詳しくないと書けず、読みにくいのが特徴です。
+OSの起動部分や、特定のハードウェアを動かすプログラム、組込みシステムなどで使われます。
+
+## 実装された関数
+
+- `ft_strlen` - 文字列の長さを計算
+- `ft_strcpy` - 文字列をコピー  
+- `ft_strcmp` - 文字列を比較
+- `ft_write` - ファイルディスクリプタに書き込み
+- `ft_read` - ファイルディスクリプタから読み込み
+- `ft_strdup` - 文字列を複製
+
+## 64-bit アセンブリの特徴
+
+> 参考: [Linux で64bitアセンブリプログラミング](https://www.mztn.org/lxasm64/amd00.html)
+
+- **レジスタのビット数が64bitに倍増**
+- **レジスタ本数が16本に倍増**
+- **SSE2を標準搭載し、XMMレジスタの数が16個に倍増**
+- **80386以降に追加された多くの命令(CMOVなど)が標準搭載**
+- **オペランドサイズが64 ビットの時、即値は64 ビットに符号拡張される**
+- **mov 命令は64ビット即値を64ビットレジスタに設定できる**
+
+## 2種類の構文
+> 参考: [x64 Assembly Language](https://ynitta.com/class/arch/pdf/x64.pdf)
+- AT&T構文
+	- レジスタ名の前に%をつける。
+	- Operation Source Destination の順である。
+	- レジスタ間接アドレッシングは、レジスタ名に"()"をつけて表現する。
+- Intel構文
+	- レジスタ名の前に%をつけない。
+	- Operation Destination Source の順である。
+	- レジスタ間接アドレッシングは、レジスタ名に"[]"をつけて表現する。
+
+## PIE 非PIE
+> 参考: [pie](https://jp.xlsoft.com/documents/intel/compiler/18/cpp_18_win_lin/GUID-EFCC2954-F3C9-4A85-A227-62B30A077109.html)
+- 実行ファイルにリンクされる位置に依存しないコードを生成するかどうかを指定します。
+
+## CコンパイラによるC言語から機械語へのコンパイルの流れ
+- [mermaid](https://mermaid.live/edit#pako:eNqlVF1L21AY_ivheFtL82HahCHY9BN2td2t9SJtUhtMkxJTpisFe3KholDHtu5iQ7Hb0La4DWTgmO7PnDXWf7GTk6zRC7e1DYE8532fj5yE8zZB2VRUIII1S65XqcdPigaFr5UCgtfIuULwO4IXHnD2HpWsZWl8tj0eHK1Si4vLVLI5On876nwan35wjw5vnTOP4Z7uu92dSanl-yWJQCr8ujy_7b4an5zddH56bH89uu6NrjqrPlUi1FTBfb992-6PDrrYJWilSCv9Py5pQs0UJm9_8_rY3T0MvTKEkH1gnwj2EPyBHFzqImcQ7NpXZokyV7jP6QfdHOnmcXfg1eElgqcIfkHOLnLeIHiC4EfkDMmX6h-7va--r6_dsLd0lVqhKpquiwuVSiWyYVvmuiousCwb4MXnmmJXRaa-GbE2xSXvseU97jokAwdFUf7qcFcjzZ2amiE1PXdqZobU7NypuRlS8zOm-h66Zqw_JT4xKlCXdLm8_kBkSKenozPT0dnp6Nx09KXp6Px09Pi_6MHfa5T84Th6d0FHWUoikwLfL8lZ7qP2EMFdBPeD4Yja-wjuTU43al-i9uf7miGuuN_aCB74Ed6laJZatjXTmAxhMohDmAyhFMJUCNMhzIQwG8JcCPM-VA0FRPDs1xQg2lZDjYCaatVkbwmaHqUI7KpaU4tAxFBRK3JDt4ugaLSwrC4bz0yz9kdpmY21KhArsr6BV426IttqSpPxt6tNqhYOVC3JbBg2EOm4QEyA2ASbQBSiAsMxtMDHeXqJp5l4BGwBMcFHOYHnYyyucXQsTrci4AVJjUUTNENzDB9jEizLMZzQ-g3gA5cD)
+
+
+## 読んだ参考書
+- [独習アセンブラ](https://www.shoeisha.co.jp/book/detail/9784798170299)
