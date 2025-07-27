@@ -64,6 +64,45 @@ OSの起動部分や、特定のハードウェアを動かすプログラム、
 - **je/jne**: 条件ジャンプ（equal/not equal）
 - **call/ret**: 関数呼び出し/戻り
 - **push/pop**: スタック操作
+
+### メモリアドレッシング
+```assembly
+mov rax, [rbx]          ; *rbx (ポインタ参照)
+mov rax, [rbx + 8]      ; *(rbx + 8) (配列アクセス)
+lea rax, [rbx + 8]      ; &(rbx + 8) (アドレス計算)
+```
+
+### データサイズ指定子
+メモリアクセス時にデータサイズを明示的に指定：
+```assembly
+mov al, byte [rdi]      ; *(char*)rdi - 1バイト読み取り
+mov ax, word [rdi]      ; *(short*)rdi - 2バイト読み取り  
+mov eax, dword [rdi]    ; *(int*)rdi - 4バイト読み取り
+mov rax, qword [rdi]    ; *(long*)rdi - 8バイト読み取り
+```
+
+```c
+// C言語との対応
+char c = *(char*)ptr;           // byte [rdi]
+short s = *(short*)ptr;         // word [rdi]  
+int i = *(int*)ptr;             // dword [rdi]
+long l = *(long*)ptr;           // qword [rdi]
+```
+
+### 文字列操作での使用例
+```assembly
+; 文字列の1文字ずつ処理 (ft_strlen等)
+mov al, byte [rdi]      ; *str
+cmp al, 0               ; if (*str == '\0')
+je  end_of_string
+inc rdi                 ; str++
+jmp loop_start
+
+; 配列アクセス
+mov al, byte [rdi + 1]  ; str[1] 
+mov bl, byte [rdi + 2]  ; str[2]
+```
+
 ## CコンパイラによるC言語から機械語へのコンパイルの流れ
 - [mermaid](https://mermaid.live/edit#pako:eNqlVF1L21AY_ivheFtL82HahCHY9BN2td2t9SJtUhtMkxJTpisFe3KholDHtu5iQ7Hb0La4DWTgmO7PnDXWf7GTk6zRC7e1DYE8532fj5yE8zZB2VRUIII1S65XqcdPigaFr5UCgtfIuULwO4IXHnD2HpWsZWl8tj0eHK1Si4vLVLI5On876nwan35wjw5vnTOP4Z7uu92dSanl-yWJQCr8ujy_7b4an5zddH56bH89uu6NrjqrPlUi1FTBfb992-6PDrrYJWilSCv9Py5pQs0UJm9_8_rY3T0MvTKEkH1gnwj2EPyBHFzqImcQ7NpXZokyV7jP6QfdHOnmcXfg1eElgqcIfkHOLnLeIHiC4EfkDMmX6h-7va--r6_dsLd0lVqhKpquiwuVSiWyYVvmuiousCwb4MXnmmJXRaa-GbE2xSXvseU97jokAwdFUf7qcFcjzZ2amiE1PXdqZobU7NypuRlS8zOm-h66Zqw_JT4xKlCXdLm8_kBkSKenozPT0dnp6Nx09KXp6Px09Pi_6MHfa5T84Th6d0FHWUoikwLfL8lZ7qP2EMFdBPeD4Yja-wjuTU43al-i9uf7miGuuN_aCB74Ed6laJZatjXTmAxhMohDmAyhFMJUCNMhzIQwG8JcCPM-VA0FRPDs1xQg2lZDjYCaatVkbwmaHqUI7KpaU4tAxFBRK3JDt4ugaLSwrC4bz0yz9kdpmY21KhArsr6BV426IttqSpPxt6tNqhYOVC3JbBg2EOm4QEyA2ASbQBSiAsMxtMDHeXqJp5l4BGwBMcFHOYHnYyyucXQsTrci4AVJjUUTNENzDB9jEizLMZzQ-g3gA5cD)
 
