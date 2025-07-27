@@ -1,6 +1,6 @@
 NAME = libasm.a
 
-SRCS = ft_strdup.s
+SRCS = ft_strdup.s ft_strlen.s ft_strcpy.s
 
 OBJS = $(SRCS:.s=.o)
 
