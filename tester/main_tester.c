@@ -440,7 +440,18 @@ void benchmark_ft_strdup(void)
 void benchmark_ft_write(void)
 {
     static const char *content = "benchmark";
-    ft_write(1, content, strlen(content));
+    static int null_fd = -1;
+    
+    // /dev/nullを開く（初回のみ）
+    if (null_fd == -1) {
+        null_fd = open("/dev/null", O_WRONLY);
+        if (null_fd == -1) {
+            // /dev/nullが開けない場合は何もしない
+            return;
+        }
+    }
+    
+    ft_write(null_fd, content, strlen(content));
 }
 
 void benchmark_ft_read(void)
