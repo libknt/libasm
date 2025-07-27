@@ -1,7 +1,12 @@
 section .text
-global ft_strlen
 
+%ifdef MACOS
+global _ft_strlen
+_ft_strlen:
+%else
+global ft_strlen
 ft_strlen:
+%endif
     push rbp
     mov rbp, rsp
     xor rax, rax
