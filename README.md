@@ -2,7 +2,6 @@
 
 libasmは、標準Cライブラリの関数をx86-64アセンブリ言語で実装したプロジェクト
 
-
 ## アセンブリ言語とは？
 アセンブリ言語は、コンピューターのCPUが直接理解する「機械語」を、人間が分かりやすいように記号で表した低水準プログラミング言語です。
 コンピューターへの具体的な指示を出すために使われます。非常に高速なプログラムを作れますが、CPUの構造に詳しくないと書けず、読みにくいのが特徴です。
@@ -43,6 +42,28 @@ OSの起動部分や、特定のハードウェアを動かすプログラム、
 > 参考: [pie](https://jp.xlsoft.com/documents/intel/compiler/18/cpp_18_win_lin/GUID-EFCC2954-F3C9-4A85-A227-62B30A077109.html)
 - 実行ファイルにリンクされる位置に依存しないコードを生成するかどうかを指定します。
 
+### レジスタ
+- **RAX, RBX, RCX, RDX**: 汎用レジスタ
+- **RSI, RDI**: 文字列操作やシステムコール引数用
+- **RSP**: スタックポインタ（現在のスタック位置）
+- **RBP**: ベースポインタ（関数のローカル変数へのアクセス用）
+
+### System V AMD64 呼び出し規約
+```
+引数の順序: RDI → RSI → RDX → RCX → R8 → R9 → スタック
+戻り値: RAX（エラー時は負の値）
+```
+
+### エラーハンドリング
+- システムコールが失敗すると負の値を返す
+- `errno`の設定は別途必要（`__errno_location`を呼び出し）
+
+### よく使われる命令
+- **mov**: データ移動（代入）
+- **cmp**: 比較（if文の条件）
+- **je/jne**: 条件ジャンプ（equal/not equal）
+- **call/ret**: 関数呼び出し/戻り
+- **push/pop**: スタック操作
 ## CコンパイラによるC言語から機械語へのコンパイルの流れ
 - [mermaid](https://mermaid.live/edit#pako:eNqlVF1L21AY_ivheFtL82HahCHY9BN2td2t9SJtUhtMkxJTpisFe3KholDHtu5iQ7Hb0La4DWTgmO7PnDXWf7GTk6zRC7e1DYE8532fj5yE8zZB2VRUIII1S65XqcdPigaFr5UCgtfIuULwO4IXHnD2HpWsZWl8tj0eHK1Si4vLVLI5On876nwan35wjw5vnTOP4Z7uu92dSanl-yWJQCr8ujy_7b4an5zddH56bH89uu6NrjqrPlUi1FTBfb992-6PDrrYJWilSCv9Py5pQs0UJm9_8_rY3T0MvTKEkH1gnwj2EPyBHFzqImcQ7NpXZokyV7jP6QfdHOnmcXfg1eElgqcIfkHOLnLeIHiC4EfkDMmX6h-7va--r6_dsLd0lVqhKpquiwuVSiWyYVvmuiousCwb4MXnmmJXRaa-GbE2xSXvseU97jokAwdFUf7qcFcjzZ2amiE1PXdqZobU7NypuRlS8zOm-h66Zqw_JT4xKlCXdLm8_kBkSKenozPT0dnp6Nx09KXp6Px09Pi_6MHfa5T84Th6d0FHWUoikwLfL8lZ7qP2EMFdBPeD4Yja-wjuTU43al-i9uf7miGuuN_aCB74Ed6laJZatjXTmAxhMohDmAyhFMJUCNMhzIQwG8JcCPM-VA0FRPDs1xQg2lZDjYCaatVkbwmaHqUI7KpaU4tAxFBRK3JDt4ugaLSwrC4bz0yz9kdpmY21KhArsr6BV426IttqSpPxt6tNqhYOVC3JbBg2EOm4QEyA2ASbQBSiAsMxtMDHeXqJp5l4BGwBMcFHOYHnYyyucXQsTrci4AVJjUUTNENzDB9jEizLMZzQ-g3gA5cD)
 
