@@ -7,10 +7,18 @@ OBJS = $(SRCS:.s=.o)
 NASM = nasm
 
 # OS detection
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Darwin)
+UNAME_M := $(shell uname -m)
+ifeq ($(UNAME_M),arm64)
+    # Apple Silicon環境ではRosettaを使用してx86_64でビルド
+    ARCH_PREFIX = arch -x86_64
+    NASMFLAGS = -f macho64 -D MACOS
+else ifeq ($(UNAME_M),x86_64)
+    # Intel Macでは通常通りビルド
+    ARCH_PREFIX = 
     NASMFLAGS = -f macho64 -D MACOS
 else
+    # その他のプラットフォーム（Linux等）
+    ARCH_PREFIX = 
     NASMFLAGS = -f elf64
 endif
 
@@ -24,7 +32,7 @@ $(NAME): $(OBJS)
 	ar rcs $(NAME) $(OBJS)
 
 %.o: %.s
-	$(NASM) $(NASMFLAGS) $< -o $@
+	$(ARCH_PREFIX) $(NASM) $(NASMFLAGS) $< -o $@
 
 clean:
 	rm -rf $(OBJS)
