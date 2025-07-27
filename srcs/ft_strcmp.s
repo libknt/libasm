@@ -24,16 +24,16 @@ ft_strcmp:
     
     ; 文字を比較
     cmp al, bl                 ; s1[i] と s2[i] を比較
-    jne .not_equal_chars       ; 文字が異なる場合は差を計算へジャンプ
+    jne .not_equal_chars       ; Jump if Not Equal
 
     ; 両方の文字が同じ場合、null終端文字かどうかをチェック
     cmp al, 0                  ; 現在の文字が '\0' かどうか確認
-    je .zero_strings           ; null文字なら文字列終端に到達（同じ文字列）
+    je .zero_strings           ; Jump if Equal
 
     ; まだ文字がある場合、次の文字へ進む
     inc rdi                    ; s1 のポインタを次の文字へ
     inc rsi                    ; s2 のポインタを次の文字へ
-    jmp .loop_start            ; ループの先頭に戻る
+    jmp .loop_start            ; Jump to loop_start
 
 .not_equal_chars:
     ; 文字が異なる場合の処理
@@ -42,11 +42,11 @@ ft_strcmp:
 
     ; 差を計算
     sub rax, rcx               ; s1[i] - s2[i] の差を計算
-    jmp .end_func              ; 関数終了へ
+    jmp .end_func              ; Jump to end_func
 
 .zero_strings:
     ; 両方の文字列が同じで終端に到達した場合
-    xor rax, rax               ; rax = 0 (文字列が同じ)
+    xor rax, rax               ; rax = 0
 
 .end_func:
     ; スタックフレームの復元

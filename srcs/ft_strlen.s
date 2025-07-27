@@ -23,11 +23,11 @@ ft_strlen:
 .loop_start:
     ; 現在の文字が null終端文字 ('\0') かどうかをチェック
     cmp  byte [rdi + rax], 0   ; str[rax] と 0 を比較
-    je .end_func               ; null文字なら関数終了へジャンプ
+    je .end_func               ; Jump if Equal
     
     ; まだ文字がある場合
     inc rax                    ; カウンタをインクリメント (rax++)
-    jmp .loop_start            ; ループの先頭に戻る
+    jmp .loop_start            ; Jump to loop_start
 
 .end_func:
     ; スタックフレームの復元
