@@ -35,18 +35,29 @@ extern __errno_location
 
 .memory_allocation:
 
-    sub rsp, 0x8
+    mov r8, rsp
+    and r8, 15
+    sub rsp, r8
+    push r8
+
+
 
 %ifdef MACOS
     call _malloc
 %else
     call malloc
 %endif
+
+    pop r8
+    add rsp, r8
+
     test rax, rax
     jz .error
 
-    pop rsi
     mov rdi, rax
+    pop rsi
+
+    push rax
 
 %ifdef MACOS
     call _ft_strcpy
@@ -67,7 +78,7 @@ extern __errno_location
     call __errno_location
 %endif
 
-    mov [rax], edi
+    mov dword [rax], 12
     xor rax, rax
     jmp .end_func
 
@@ -80,7 +91,7 @@ extern __errno_location
     call __errno_location
 %endif
 
-    mov [rax], edi
+    mov dword [rax], 22
 
     xor rax, rax
 
