@@ -17,10 +17,12 @@ BOLD = \033[1m
 # プロジェクト設定
 LIBASM = ../libasm.a
 LIBASM_DIR = ..
+LIBASM_LIB_DIR = ..
 
 # コンパイラ設定
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
+LDFLAGS = -L$(LIBASM_LIB_DIR) -lasm
 
 # アーキテクチャ検出
 UNAME_M := $(shell uname -m)
@@ -54,13 +56,13 @@ all: build test_exec
 # ビルド
 build: $(LIBASM) $(COMMON_OBJS)
 	@echo "$(GREEN)$(BOLD)libasm テストスイートをビルド中...$(RESET)"
-	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strlen.c $(COMMON_OBJS) $(LIBASM) -o test_strlen
-	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strcmp.c $(COMMON_OBJS) $(LIBASM) -o test_strcmp
-	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strcpy.c $(COMMON_OBJS) $(LIBASM) -o test_strcpy
-	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strdup.c $(COMMON_OBJS) $(LIBASM) -o test_strdup
-	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_write.c $(COMMON_OBJS) $(LIBASM) -o test_write
-	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_read.c $(COMMON_OBJS) $(LIBASM) -o test_read
-	@$(ARCH_PREFIX) $(CC) $(CFLAGS) $(MAIN_TEST).c $(COMMON_OBJS) $(LIBASM) -o $(MAIN_TEST)
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strlen.c $(COMMON_OBJS) $(LDFLAGS) -o test_strlen
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strcmp.c $(COMMON_OBJS) $(LDFLAGS) -o test_strcmp
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strcpy.c $(COMMON_OBJS) $(LDFLAGS) -o test_strcpy
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strdup.c $(COMMON_OBJS) $(LDFLAGS) -o test_strdup
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_write.c $(COMMON_OBJS) $(LDFLAGS) -o test_write
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_read.c $(COMMON_OBJS) $(LDFLAGS) -o test_read
+	@$(ARCH_PREFIX) $(CC) $(CFLAGS) $(MAIN_TEST).c $(COMMON_OBJS) $(LDFLAGS) -o $(MAIN_TEST)
 
 # テスト実行
 test_exec: build
