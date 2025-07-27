@@ -1,3 +1,9 @@
+; ----------------------------------------
+; ft_strlen.s - 文字列の長さを計算する関数
+; ----------------------------------------
+; manual: man strlen
+; ----------------------------------------
+
 section .text
 
 %ifdef MACOS
@@ -7,16 +13,23 @@ _ft_strlen:
 global ft_strlen
 ft_strlen:
 %endif
-    push rbp
-    mov rbp, rsp
-    xor rax, rax
+    ; スタックフレームの設定
+    push rbp                    ; 現在のベースポインタを保存
+    mov rbp, rsp               ; 新しいスタックフレームを設定
+    
+    ; カウンタの初期化
+    xor rax, rax               ; rax = 0 (文字列の長さを数えるカウンタ)
 
 .loop_start:
-    cmp  byte [rdi + rax], 0
-    je .end_func
-    inc rax
-    jmp .loop_start
+    ; 現在の文字が null終端文字 ('\0') かどうかをチェック
+    cmp  byte [rdi + rax], 0   ; str[rax] と 0 を比較
+    je .end_func               ; null文字なら関数終了へジャンプ
+    
+    ; まだ文字がある場合
+    inc rax                    ; カウンタをインクリメント (rax++)
+    jmp .loop_start            ; ループの先頭に戻る
 
 .end_func:
-    pop rbp
-    ret
+    ; スタックフレームの復元
+    pop rbp                    ; 元のベースポインタを復元
+    ret                        ; 呼び出し元に戻る (戻り値はraxに格納済み)
