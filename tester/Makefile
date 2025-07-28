@@ -1,9 +1,3 @@
-# ===============================================
-# libasm テスター Makefile v2.0
-# スタブ版と本番版の両方に対応
-# ===============================================
-
-# 色定義
 RESET = \033[0m
 RED = \033[31m
 GREEN = \033[32m
@@ -19,12 +13,10 @@ LIBASM = ../libasm.a
 LIBASM_DIR = ..
 LIBASM_LIB_DIR = ..
 
-# コンパイラ設定
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
 LDFLAGS = -L$(LIBASM_LIB_DIR) -lasm
 
-# アーキテクチャ検出
 UNAME_M := $(shell uname -m)
 ifeq ($(UNAME_M),arm64)
     # Apple Silicon環境ではRosettaを使用してx86_64でビルド
@@ -34,13 +26,10 @@ else
     ARCH_PREFIX = 
 endif
 
-# テストファイル
 MAIN_TEST = main_tester
 
-# 共通オブジェクトファイル
 COMMON_OBJS = test_utils.o
 
-# OS検出
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
     VALGRIND_CMD = # macOSではvalgrindは使用不可
@@ -50,10 +39,8 @@ else
     MEMORY_TEST_MSG = "valgrindでメモリリークテストを実行中..."
 endif
 
-# デフォルトターゲット（ビルド＋テスト実行）
 all: build test_exec
 
-# ビルド
 build: $(LIBASM) $(COMMON_OBJS)
 	@echo "$(GREEN)$(BOLD)libasm テストスイートをビルド中...$(RESET)"
 	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_strlen.c $(COMMON_OBJS) $(LDFLAGS) -o test_strlen
@@ -64,34 +51,28 @@ build: $(LIBASM) $(COMMON_OBJS)
 	@$(ARCH_PREFIX) $(CC) $(CFLAGS) test_read.c $(COMMON_OBJS) $(LDFLAGS) -o test_read
 	@$(ARCH_PREFIX) $(CC) $(CFLAGS) $(MAIN_TEST).c $(COMMON_OBJS) $(LDFLAGS) -o $(MAIN_TEST)
 
-# テスト実行
 test_exec: build
 	@echo "$(GREEN)$(BOLD)=====================================$(RESET)"
 	@echo "$(GREEN)$(BOLD)  libasm テストスイート実行中  $(RESET)"
 	@echo "$(GREEN)$(BOLD)=====================================$(RESET)"
 	@./$(MAIN_TEST)
 
-# libasmライブラリのビルド
 $(LIBASM):
 	@echo "$(CYAN)$(BOLD)libasm.aをビルド中...$(RESET)"
 	@$(ARCH_PREFIX) $(MAKE) -C $(LIBASM_DIR) all
 
-# 共通オブジェクトファイルのビルド
 test_utils.o: test_utils.c test_utils.h
 	@echo "$(YELLOW)共通テストユーティリティをビルド中...$(RESET)"
 	@$(ARCH_PREFIX) $(CC) $(CFLAGS) -c test_utils.c -o test_utils.o
 
 
 
-# ビルドのエイリアス
 real: build
 
-# テスト実行のエイリアス
 test: test_exec
 
 
 
-# メモリリークテスト
 memory_test: $(MAIN_TEST)
 	@echo "$(MAGENTA)$(BOLD)================================$(RESET)"
 	@echo "$(MAGENTA)$(BOLD)  メモリリークテスト実行中     $(RESET)"
@@ -104,14 +85,12 @@ else
 	@echo "$(WHITE)leaks --atExit -- ./$(MAIN_TEST)$(RESET)"
 endif
 
-# パフォーマンステスト
 benchmark: $(MAIN_TEST)
 	@echo "$(BLUE)$(BOLD)===============================$(RESET)"
 	@echo "$(BLUE)$(BOLD)  パフォーマンステスト実行中  $(RESET)"
 	@echo "$(BLUE)$(BOLD)===============================$(RESET)"
 	@./$(MAIN_TEST) --benchmark
 
-# 詳細テスト（全てのオプション付き）
 test_all: all
 	@echo "$(GREEN)$(BOLD)============================================$(RESET)"
 	@echo "$(GREEN)$(BOLD)  包括的テストスイート実行中（全モード）  $(RESET)"
@@ -122,7 +101,17 @@ test_all: all
 	@echo ""
 	@$(MAKE) benchmark
 
-# ヘルプ
+test:
+	@echo "$(YELLOW)$(BOLD)=================================$(RESET)"
+	@echo "$(YELLOW)$(BOLD)  libasm テストスイート実行中  $(RESET)"
+	@echo "$(YELLOW)$(BOLD)=================================$(RESET)"
+	@./test_strlen
+	@./test_strcmp
+	@./test_strcpy
+	@./test_strdup
+	@./test_write
+	@./test_read
+	@echo "$(GREEN)$(BOLD)テスト完了！$(RESET)"
 help:
 	@echo "$(BOLD)libasm テスタースイート v2.0$(RESET)"
 	@echo ""
@@ -144,7 +133,6 @@ help:
 	@echo "  make build              # ビルドのみ"
 	@echo "  make test               # テスト実行のみ"
 
-# クリーンアップ
 clean:
 	@echo "$(RED)テストファイルを削除中...$(RESET)"
 	@rm -f $(MAIN_TEST)
@@ -156,8 +144,6 @@ fclean: clean
 
 re: fclean all
 
-# Phonyターゲット
 .PHONY: all build test_exec real test memory_test benchmark test_all help clean fclean re
 
-# デフォルトターゲット
 .DEFAULT_GOAL := all

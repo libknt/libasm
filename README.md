@@ -7,14 +7,30 @@ libasmは、標準Cライブラリの関数をx86-64アセンブリ言語で実�
 コンピューターへの具体的な指示を出すために使われます。非常に高速なプログラムを作れますが、CPUの構造に詳しくないと書けず、読みにくいのが特徴です。
 OSの起動部分や、特定のハードウェアを動かすプログラム、組込みシステムなどで使われます。
 
+# refs
+- [独習アセンブラ](https://www.shoeisha.co.jp/book/detail/9784798170299)
+- [Intel® 64 and IA-32 Architectures Software Developer Manuals](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html)
+- [This file is a user guide to the GNU assembler as (GNU Binutils) version 2.45.](https://sourceware.org/binutils/docs/as/)
+- [Linux System Call Table for x86 64](https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/)
+- [https://ja.wikipedia.org/wiki/Netwide_Assembler](https://ja.wikipedia.org/wiki/Netwide_Assembler)
+- [nasm github](https://github.com/netwide-assembler/nasm)
+- [This is the project webpage for the Netwide Assembler (NASM)](https://www.nasm.us/)
+- [NASM - The Netwide Assembler](https://www.nasm.us/xdoc/2.16.03/html/nasmdoc0.html)
+
 ## 実装された関数
 
 - `ft_strlen` - 文字列の長さを計算
+    - [man strlen](https://man7.org/linux/man-pages/man3/strlen.3.html)
 - `ft_strcpy` - 文字列をコピー  
+    - [man strcpy](https://man7.org/linux/man-pages/man3/strcpy.3p.html)
 - `ft_strcmp` - 文字列を比較
+    - [man strcmp](https://www.man7.org/linux/man-pages/man3/strcmp.3.html)
 - `ft_write` - ファイルディスクリプタに書き込み
+    - [man write](https://man7.org/linux/man-pages/man2/write.2.html)
 - `ft_read` - ファイルディスクリプタから読み込み
+    - [man read](https://man7.org/linux/man-pages/man2/read.2.html)
 - `ft_strdup` - 文字列を複製
+    - [man strdup](https://man7.org/linux/man-pages/man3/strdup.3.html)
 
 ## 64-bit アセンブリの特徴
 
@@ -56,7 +72,7 @@ OSの起動部分や、特定のハードウェアを動かすプログラム、
 ```
 
 ### スタックアライメント
-64ビットシステムでは、ライブラリ関数呼び出し前にスタックを16バイト境界に合わせる必要があります：
+64ビットシステムでは、ライブラリ関数呼び出し前にスタックを16バイト境界に合わせる必要があります
 
 ```c
 // C言語では自動的に処理される
@@ -80,7 +96,7 @@ add rsp, r8                ; 元のスタック位置に戻す
 ```
 
 ### 16バイト境界とは？
-メモリアドレスが16の倍数になること：
+メモリアドレスが16の倍数になること
 
 ```
 16バイト境界の例
@@ -248,9 +264,6 @@ movsx rax, bl              ; 8bit → 64bit (符号拡張)
 - [mermaid](https://mermaid.live/edit#pako:eNqlVF1L21AY_ivheFtL82HahCHY9BN2td2t9SJtUhtMkxJTpisFe3KholDHtu5iQ7Hb0La4DWTgmO7PnDXWf7GTk6zRC7e1DYE8532fj5yE8zZB2VRUIII1S65XqcdPigaFr5UCgtfIuULwO4IXHnD2HpWsZWl8tj0eHK1Si4vLVLI5On876nwan35wjw5vnTOP4Z7uu92dSanl-yWJQCr8ujy_7b4an5zddH56bH89uu6NrjqrPlUi1FTBfb992-6PDrrYJWilSCv9Py5pQs0UJm9_8_rY3T0MvTKEkH1gnwj2EPyBHFzqImcQ7NpXZokyV7jP6QfdHOnmcXfg1eElgqcIfkHOLnLeIHiC4EfkDMmX6h-7va--r6_dsLd0lVqhKpquiwuVSiWyYVvmuiousCwb4MXnmmJXRaa-GbE2xSXvseU97jokAwdFUf7qcFcjzZ2amiE1PXdqZobU7NypuRlS8zOm-h66Zqw_JT4xKlCXdLm8_kBkSKenozPT0dnp6Nx09KXp6Px09Pi_6MHfa5T84Th6d0FHWUoikwLfL8lZ7qP2EMFdBPeD4Yja-wjuTU43al-i9uf7miGuuN_aCB74Ed6laJZatjXTmAxhMohDmAyhFMJUCNMhzIQwG8JcCPM-VA0FRPDs1xQg2lZDjYCaatVkbwmaHqUI7KpaU4tAxFBRK3JDt4ugaLSwrC4bz0yz9kdpmY21KhArsr6BV426IttqSpPxt6tNqhYOVC3JbBg2EOm4QEyA2ASbQBSiAsMxtMDHeXqJp5l4BGwBMcFHOYHnYyyucXQsTrci4AVJjUUTNENzDB9jEizLMZzQ-g3gA5cD)
 
 
-## 読んだ参考書
-- [独習アセンブラ](https://www.shoeisha.co.jp/book/detail/9784798170299)
-
 ## 論理式
 
 C言語の論理式・条件文とアセンブリでの実装方法の対応
@@ -390,4 +403,23 @@ mov rbp, rsp               ; 新しいスタックフレームを設定
 ...
 pop rbp                    ; 元のベースポインタを復元
 ret                        ; 呼び出し元に戻る (戻り値はraxに格納済み)
+```
+
+
+# Test
+```bash
+$ brew install nasm
+$ make
+$ cd tester
+$ make
+```
+
+```bash
+$ ./main_tester
+$ ./test_read
+$ ./test_strcmp
+$ ./test_strcpy
+$ ./test_strdup
+$ ./test_strlen
+$ ./test_write
 ```
