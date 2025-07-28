@@ -28,12 +28,11 @@ extern __errno_location
 
     ; read システムコールを実行
     syscall                    ; システムコール実行 (fd=rdi, buf=rsi, count=rdx)
-    
+    jc .error                  ; Jump if Carry flag set
+
     ; エラーチェック
     cmp rax, 0                 ; 戻り値が負の値かどうか確認
     jl .error                  ; Jump if Less than zero
-
-    jc .error                  ; Jump if Carry flag set
 
     jmp .success               ; Jump to success
 
