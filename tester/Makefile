@@ -101,6 +101,17 @@ test_all: all
 	@echo ""
 	@$(MAKE) benchmark
 
+test:
+	@echo "$(YELLOW)$(BOLD)=================================$(RESET)"
+	@echo "$(YELLOW)$(BOLD)  libasm テストスイート実行中  $(RESET)"
+	@echo "$(YELLOW)$(BOLD)=================================$(RESET)"
+	@./test_strlen
+	@./test_strcmp
+	@./test_strcpy
+	@./test_strdup
+	@./test_write
+	@./test_read
+	@echo "$(GREEN)$(BOLD)テスト完了！$(RESET)"
 help:
 	@echo "$(BOLD)libasm テスタースイート v2.0$(RESET)"
 	@echo ""
