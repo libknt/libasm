@@ -404,3 +404,22 @@ mov rbp, rsp               ; 新しいスタックフレームを設定
 pop rbp                    ; 元のベースポインタを復元
 ret                        ; 呼び出し元に戻る (戻り値はraxに格納済み)
 ```
+
+
+# Test
+```bash
+$ brew install nasm
+$ make
+$ cd tester
+$ make
+```
+
+```bash
+$ ./main_tester
+$ ./test_read
+$ ./test_strcmp
+$ ./test_strcpy
+$ ./test_strdup
+$ ./test_strlen
+$ ./test_write
+```
